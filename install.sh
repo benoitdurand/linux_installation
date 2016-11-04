@@ -1,4 +1,5 @@
 clear
+echo "## Copie des fichiers de configuration pour WGET ##"
 cp /tmp/wgetrc /root/.wgetrc
 cp /tmp/wgetrc /home/frdbecc
 
