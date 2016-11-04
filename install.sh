@@ -1,7 +1,10 @@
 clear
+cp /tmp/wgetrc /root/.wgetrc
+cp /tmp/wgetrc /home/frdbecc
+
 echo "## Récupération de tous les packages ##"
 apt-get update > /dev/null
-apt-get install -y sudo apt-show-versions build-essential ufw vim git libpcre3-dev libpcre3 libpcrecpp0 libssl-dev zlib1g-dev unattended-upgrades apache2-threaded-dev libxml2-dev  libxml2 libxml2-dev libxml2-utils libaprutil1 libaprutil1-dev automake autoconf libtool > /dev/nul
+apt-get install -y sudo apt-show-versions build-essential ufw vim git libpcre3 libpcrecpp0 libssl-dev zlib1g-dev unattended-upgrades apache2-threaded-dev libxml2-dev  libxml2 libxml2-dev libxml2-utils libaprutil1 libaprutil1-dev automake autoconf libtool libpcre3-dev > /dev/nul
 
 echo "## Suppression des packages inutiles ##"
 apt-get -y purge rpcbind* exim4* telnet ftp > /dev/null
@@ -10,6 +13,8 @@ apt-get -y autoremove > /dev/null
 echo "## Paramétrage de Git ##"
 git config --global user.name "administrateur"
 git config --global user.email "administrateur@nowhere.fr"
+git config --global http.proxy http://benoit_durand:PhnazWTJ@10.49.64.5:8080
+git config --global https.proxy http://benoit_durand:PhnazWTJ@10.49.64.5:8080
 
 echo "## Désactiver l'ip V6"
 echo net.ipv6.conf.all.disable_ipv6=1 | tee -a /etc/sysctl.conf
@@ -41,6 +46,7 @@ ufw --force enable
 
 echo "## Compilation et Installation de MODSECURITY pour NGINX"
 git clone https://github.com/SpiderLabs/ModSecurity.git mod_security
+cd mod_security
 ./autogen.sh
 ./configure --enable-standalone-module
 make
@@ -116,12 +122,12 @@ sed -i -e 's/\(.*max_execution_time =\).*$/\1 60/' /etc/php/7.0/fpm/php.ini
 sed -i -e 's/\(.*report_memleaks =\).*$/\1 On/' /etc/php/7.0/fpm/php.ini
 sed -i -e 's/\(.*track_errors =\).*$/\1 Off/' /etc/php/7.0/fpm/php.ini
 sed -i -e 's/\(.*html_errors =\).*$/\1 Off/' /etc/php/7.0/fpm/php.ini
-sed -i -e 's/\(.*allow_url_fopen =\).*$/\1 Off/' /etc/php5/fpm/php.ini
-sed -i -e 's/\(.*allow_url_include =\).*$/\1 Off/' /etc/php5/fpm/php.ini
-sed -i -e 's/\(.*variables_order =\).*$/\1 "GPSE"/' /etc/php5/fpm/php.ini
-sed -i -e "/variables_order/a\allow_webdav_methods = Off" /etc/php5/fpm/php.ini
-sed -i -e 's/\(.*allow_webdav_methods =\).*$/\1 Off/' /etc/php5/fpm/php.ini
-sed -i -e 's/\(.*disable_functions =\).*$/\1 system, exec, shell_exec, passthru, phpinfo, show_source, popen, proc_open, fopen_with_path, dbmopen, dbase_open, putenv, move_uploaded_file, chdir, mkdir, rmdir, chmod, rename, filepro, filepro_rowcount, filepro_retrieve, posix_mkfifo/' /etc/php5/fpm/php.ini
+sed -i -e 's/\(.*allow_url_fopen =\).*$/\1 Off/' /etc/php/7.0/fpm/php.ini
+sed -i -e 's/\(.*allow_url_include =\).*$/\1 Off/' /etc/php/7.0/fpm/php.ini
+sed -i -e 's/\(.*variables_order =\).*$/\1 "GPSE"/' /etc/php/7.0/fpm/php.ini
+sed -i -e "/variables_order/a\allow_webdav_methods = Off" /etc/php/7.0/fpm/php.ini
+sed -i -e 's/\(.*allow_webdav_methods =\).*$/\1 Off/' /etc/php/7.0/fpm/php.ini
+sed -i -e 's/\(.*disable_functions =\).*$/\1 system, exec, shell_exec, passthru, phpinfo, show_source, popen, proc_open, fopen_with_path, dbmopen, dbase_open, putenv, move_uploaded_file, chdir, mkdir, rmdir, chmod, rename, filepro, filepro_rowcount, filepro_retrieve, posix_mkfifo/' /etc/php/7.0/fpm/php.ini
 
 sed -i -e 's/listen = \/run\/php\/php7.0-fpm.sock/listen = 127.0.0.1:9000/' /etc/php/7.0/fpm/pool.d/www.conf
 service php7.0-fpm restart
