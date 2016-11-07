@@ -69,7 +69,7 @@ mkdir /var/www
 chown frdbecc:frdbecc /var/www
 cd /tmp
 
-echo "<?php echo 'It's Works !!; ?>" > /var/www/index.php
+echo "<?php echo \"It's Works !!\"; ?>" > /var/www/index.php
 cp /tmp/nginx.config /etc/nginx/nginx.conf
 cp /tmp/unicode.mapping /etc/nginx/
 cp /tmp/modsecurity.conf /etc/nginx/
@@ -95,8 +95,6 @@ sed -i -e 's/^#log_queries_not_using_indexes/log_queries_not_using_indexes/' /et
 echo "## Installation de PHP7 ##"
 echo "deb http://dotdeb.thefox.com.fr jessie all" | tee -a /etc/apt/sources.list.d/dotdeb.list > /dev/null
 echo "deb-src http://dotdeb.thefox.com.fr jessie all" | tee -a /etc/apt/sources.list.d/dotdeb.list > /dev/null
-echo "deb http://packages.dotdeb.org jessie all" | tee -a /etc/apt/sources.list.d/dotdeb.list > /dev/null
-echo "deb-src http://packages.dotdeb.org jessie all" | tee -a /etc/apt/sources.list.d/dotdeb.list > /dev/null
 echo "deb http://packages.dotdeb.org jessie all" | tee -a /etc/apt/sources.list.d/dotdeb.list > /dev/null
 echo "deb-src http://packages.dotdeb.org jessie all" | tee -a /etc/apt/sources.list.d/dotdeb.list > /dev/null
 
